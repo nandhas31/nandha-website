@@ -2,61 +2,44 @@
 
 import { useEffect, useState } from "react";
 
+import { SECTIONS, type SectionId } from "@/lib/site-data";
+import { useScroll } from "@/lib/use-scroll";
 import { cn } from "@/lib/utils";
 
-const sections = [
-  { id: "home", label: "Intro" },
-  { id: "experience", label: "Experience" },
-  { id: "education", label: "Education" },
-  { id: "projects", label: "Projects" },
-  { id: "contact", label: "Contact" },
-];
+/** Treat the middle 10% band of the viewport as "the section you're reading". */
+const ACTIVE_BAND = "-45% 0px -45% 0px";
 
-export function SectionNav() {
-  const [activeId, setActiveId] = useState(sections[0].id);
-  const [progress, setProgress] = useState(0);
+function useActiveSection(): SectionId {
+  const [activeId, setActiveId] = useState<SectionId>(SECTIONS[0].id);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
-          }
-        });
-      },
-      { rootMargin: "-45% 0px -45% 0px", threshold: 0 }
+    const elements = SECTIONS.map(({ id }) => document.getElementById(id)).filter(
+      (el): el is HTMLElement => el !== null
     );
 
-    const elements = sections
-      .map(({ id }) => document.getElementById(id))
-      .filter((el): el is HTMLElement => el !== null);
-    elements.forEach((el) => observer.observe(el));
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Several sections can straddle the band at once, so pick the topmost
+        // rather than letting whichever entry came last in the batch win.
+        const topmost = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
 
+        if (topmost) setActiveId(topmost.target.id as SectionId);
+      },
+      { rootMargin: ACTIVE_BAND, threshold: 0 }
+    );
+
+    elements.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    let raf = 0;
-    const updateProgress = () => {
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(docHeight > 0 ? Math.min(1, Math.max(0, window.scrollY / docHeight)) : 0);
-    };
+  return activeId;
+}
 
-    const onScroll = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(updateProgress);
-    };
-
-    updateProgress();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
-  }, []);
+export function SectionNav() {
+  const activeId = useActiveSection();
+  const { progress } = useScroll();
 
   return (
     <nav
@@ -64,15 +47,12 @@ export function SectionNav() {
       className="fixed top-1/2 left-6 z-40 hidden -translate-y-1/2 items-stretch gap-4 lg:flex"
     >
       <ul className="flex flex-col justify-center gap-6">
-        {sections.map((section) => {
+        {SECTIONS.map((section) => {
           const active = activeId === section.id;
           return (
             <li key={section.id}>
-              <button
-                type="button"
-                onClick={() =>
-                  document.getElementById(section.id)?.scrollIntoView({ behavior: "smooth" })
-                }
+              <a
+                href={`#${section.id}`}
                 aria-current={active ? "true" : undefined}
                 className={cn(
                   "text-xs font-medium tracking-wide uppercase transition-colors",
@@ -80,7 +60,7 @@ export function SectionNav() {
                 )}
               >
                 {section.label}
-              </button>
+              </a>
             </li>
           );
         })}
