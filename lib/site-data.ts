@@ -7,8 +7,7 @@ export const MARKDOWN_PATH = "/llms.txt";
 
 export const profile = {
   name: "Nandha Sundaravadivel",
-  tagline:
-    "A short placeholder tagline goes here: what you do, or what you care about.",
+  tagline: "Software Engineer | What the hell is going on",
 };
 
 export const currentRole = {
