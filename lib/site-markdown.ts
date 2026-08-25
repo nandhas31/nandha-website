@@ -8,55 +8,56 @@ import {
   projects,
 } from "@/lib/site-data";
 
+/** Joins blocks with a blank line between them, the way markdown wants. */
+function blocks(...parts: string[]): string {
+  return parts.join("\n\n");
+}
+
+function experienceBlock(): string {
+  const workingOn = currentRole.link
+    ? `\n- **Working on:** [${currentRole.link.label}](${currentRole.link.url})`
+    : "";
+
+  return blocks(
+    "## Professional Experience",
+    `### ${currentRole.company} (current)`,
+    `- **Dates:** ${currentRole.date}${workingOn}`,
+    "### Internships",
+    [
+      "| Company | When |",
+      "| --- | --- |",
+      ...internships.map((role) => `| ${role.company} | ${role.date} |`),
+    ].join("\n")
+  );
+}
+
 /**
  * Renders the whole site as a single markdown document, the agent-facing view.
  * Built from the same data the human-facing page renders, so the two cannot drift.
  */
 export function siteMarkdown(): string {
-  const lines: string[] = [];
-
-  lines.push(`# ${profile.name}`);
-  lines.push("");
-  lines.push(`> ${profile.tagline}`);
-  lines.push("");
-
-  lines.push("## Professional Experience");
-  lines.push("");
-  lines.push(`### ${currentRole.company} (current)`);
-  lines.push("");
-  lines.push(`- **Dates:** ${currentRole.date}`);
-  lines.push(
-    `- **Working on:** [${currentRole.link.label}](${currentRole.link.url})`
+  return (
+    blocks(
+      `# ${profile.name}`,
+      `> ${profile.tagline}`,
+      experienceBlock(),
+      blocks(
+        "## Education",
+        education
+          .map((entry) => `- **${entry.school}**: ${entry.degree} · ${entry.years}`)
+          .join("\n")
+      ),
+      blocks(
+        "## Projects",
+        projects.map((project) => `- **${project.name}**: ${project.description}`).join("\n")
+      ),
+      blocks(
+        "## Contact",
+        [
+          `- Email: [${EMAIL}](mailto:${EMAIL})`,
+          `- LinkedIn: [${LINKEDIN_URL}](${LINKEDIN_URL})`,
+        ].join("\n")
+      )
+    ) + "\n"
   );
-  lines.push("");
-  lines.push("### Internships");
-  lines.push("");
-  lines.push("| Company | When |");
-  lines.push("| --- | --- |");
-  for (const internship of internships) {
-    lines.push(`| ${internship.company} | ${internship.date} |`);
-  }
-  lines.push("");
-
-  lines.push("## Education");
-  lines.push("");
-  for (const entry of education) {
-    lines.push(`- **${entry.school}**: ${entry.degree} · ${entry.years}`);
-  }
-  lines.push("");
-
-  lines.push("## Projects");
-  lines.push("");
-  for (const project of projects) {
-    lines.push(`- **${project.name}**: ${project.description}`);
-  }
-  lines.push("");
-
-  lines.push("## Contact");
-  lines.push("");
-  lines.push(`- Email: [${EMAIL}](mailto:${EMAIL})`);
-  lines.push(`- LinkedIn: [${LINKEDIN_URL}](${LINKEDIN_URL})`);
-  lines.push("");
-
-  return lines.join("\n");
 }
