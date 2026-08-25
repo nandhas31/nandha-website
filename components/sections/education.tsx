@@ -10,7 +10,7 @@ export function EducationSection() {
         {education.map((entry, index) => (
           <Reveal key={entry.id} delay={step(2 + index)}>
             <Card className="flex flex-col gap-4 sm:flex-row sm:items-center">
-              <GeorgiaTechLogo className="h-7 w-auto shrink-0 sm:h-8" />
+              <GeorgiaTechLogo className="h-9 w-auto shrink-0 sm:h-10" />
               <div>
                 <h3 className="font-semibold">{entry.school}</h3>
                 <p className="mt-1 text-sm text-muted-foreground">
