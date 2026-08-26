@@ -4,7 +4,7 @@ import { Contact } from "@/components/sections/contact";
 import { EducationSection } from "@/components/sections/education";
 import { Experience } from "@/components/sections/experience";
 import { Hero } from "@/components/sections/hero";
-import { Projects } from "@/components/sections/projects";
+import { Highlights } from "@/components/sections/highlights";
 import { MARKDOWN_PATH } from "@/lib/site-data";
 import { siteMarkdown } from "@/lib/site-markdown";
 
@@ -16,7 +16,7 @@ export default function Home() {
         <Hero />
         <Experience />
         <EducationSection />
-        <Projects />
+        <Highlights />
         <Contact />
       </AudienceSwitch>
     </main>

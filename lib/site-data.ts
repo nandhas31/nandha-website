@@ -25,7 +25,7 @@ export const SECTIONS = [
   { id: "home", label: "Intro" },
   { id: "experience", label: "Experience" },
   { id: "education", label: "Education" },
-  { id: "projects", label: "Projects" },
+  { id: "highlights", label: "Highlights" },
   { id: "contact", label: "Contact" },
 ] as const;
 
@@ -78,14 +78,40 @@ export const education: Education[] = [
   },
 ];
 
-export interface Project {
+/** Ship stage, worn as a badge on the highlight. */
+export type Stage = "alpha" | "beta" | "stealth";
+
+export interface Highlight {
   id: string;
   name: string;
   description: string;
+  stage?: Stage;
+  /** Where the highlight lives, when it has somewhere to go. */
+  href?: string;
 }
 
-export const projects: Project[] = [
-  { id: "placeholder-1", name: "Coming soon", description: "Wait for it." },
-  { id: "placeholder-2", name: "Coming soon", description: "Seriously, wait for it." },
-  { id: "placeholder-3", name: "Coming soon", description: "Still waiting? Same." },
+export const highlights: Highlight[] = [
+  {
+    id: "aimonkey",
+    name: "aiMonkey",
+    description:
+      "A typing test built on the words you actually type. The moat is your own keystrokes.",
+    stage: "alpha",
+    href: "/type",
+  },
+  {
+    id: "placeholder-1",
+    name: "Coming soon",
+    description: "Still in stealth. Pre-seed, pre-product, pre-idea.",
+    stage: "stealth",
+  },
+  {
+    id: "placeholder-2",
+    name: "Coming soon",
+    description: "Closed beta of a closed beta. Ask me about the waitlist.",
+    stage: "beta",
+  },
 ];
+
+/** The stage the typing app ships under, shown on its own page too. */
+export const aiMonkey = highlights[0];

@@ -5,7 +5,7 @@ import {
   education,
   internships,
   profile,
-  projects,
+  highlights,
 } from "@/lib/site-data";
 
 /** Joins blocks with a blank line between them, the way markdown wants. */
@@ -48,8 +48,16 @@ export function siteMarkdown(): string {
           .join("\n")
       ),
       blocks(
-        "## Projects",
-        projects.map((project) => `- **${project.name}**: ${project.description}`).join("\n")
+        "## Highlights",
+        highlights
+          .map((highlight) => {
+            const name = highlight.href
+              ? `[${highlight.name}](${highlight.href})`
+              : highlight.name;
+            const stage = highlight.stage ? ` _(${highlight.stage})_` : "";
+            return `- **${name}**${stage}: ${highlight.description}`;
+          })
+          .join("\n")
       ),
       blocks(
         "## Contact",
