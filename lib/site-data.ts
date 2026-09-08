@@ -14,7 +14,7 @@ export const BRAND_COLOR = {
 
 export const profile = {
   name: "Nandha Sundaravadivel",
-  tagline: "Software Engineer | What the hell is going on",
+  tagline: "Software Engineer | Focused on building and scaling agentic systems",
 };
 
 /**
