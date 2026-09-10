@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <title>Nandha Sundaravadivel</title>
+  <!--
+    A terminal block cursor resting on its baseline.
+
+    Every edge sits on an even unit, so at 16px - where this spends most of its
+    life - the block lands on whole pixels (6x8) instead of antialiasing its
+    bottom edge into the gap below it. That 2px gap is what keeps the mark
+    reading as a cursor resting on a baseline rather than one solid blob.
+
+    Ink spans y 4..28, so the mark is optically centred on the 32-unit canvas.
+
+    Only the block blinks. The baseline stays put so the favicon never fully
+    disappears from the tab, and so browsers that ignore SMIL in favicons
+    (Chrome) still get the complete mark as a static frame.
+  -->
+  <style>
+    .ink { fill: #1d1d16 }
+    @media (prefers-color-scheme: dark) {
+      .ink { fill: #fbfbf9 }
+    }
+  </style>
+  <rect class="ink" x="10" y="4" width="12" height="16" rx="2">
+    <animate
+      attributeName="opacity"
+      values="1;1;0;0"
+      keyTimes="0;0.5;0.5;1"
+      dur="1.2s"
+      calcMode="discrete"
+      repeatCount="indefinite" />
+  </rect>
+  <rect class="ink" x="6" y="24" width="20" height="4" rx="2" />
+</svg>
