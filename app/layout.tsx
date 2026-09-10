@@ -19,6 +19,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
       <head>
         {/* Lets agents find the markdown rendering of this site without executing JS. */}
         <link rel="alternate" type="text/markdown" href={MARKDOWN_PATH} />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       </head>
       <body>{children}</body>
     </html>
